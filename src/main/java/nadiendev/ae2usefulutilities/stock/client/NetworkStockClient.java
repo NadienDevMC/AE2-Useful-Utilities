@@ -2,8 +2,6 @@ package nadiendev.ae2usefulutilities.stock.client;
 
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
-import nadiendev.ae2usefulutilities.compat.jei.StockToggleButton;
-import nadiendev.ae2usefulutilities.stock.network.NetworkStockRequestC2SPacket;
 import nadiendev.ae2usefulutilities.stock.network.OpenCraftC2SPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -18,7 +16,6 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
@@ -28,38 +25,12 @@ import org.lwjgl.glfw.GLFW;
 @OnlyIn(Dist.CLIENT)
 public class NetworkStockClient {
 
-    private static final int REQUEST_INTERVAL_TICKS = 10;
-    private static final int IDLE_INTERVAL_TICKS = 40;
     private static final long CRAFT_COOLDOWN_MS = 400;
 
-    private int ticks;
     private long lastCraftRequest;
-
-    @SubscribeEvent
-    public void onClientTick(ClientTickEvent.Post event) {
-        Minecraft minecraft = Minecraft.getInstance();
-        boolean watching = minecraft.player != null
-                && minecraft.screen != null
-                && StockToggleButton.isEnabled();
-        if (!watching) {
-            ticks = 0;
-            if (minecraft.player == null || !StockToggleButton.isEnabled()) {
-                NetworkStockCache.clear();
-            }
-            return;
-        }
-        if (ticks-- <= 0) {
-            ticks = NetworkStockCache.isConnected() ? REQUEST_INTERVAL_TICKS : IDLE_INTERVAL_TICKS;
-            ClientPacketDistributor.sendToServer(new NetworkStockRequestC2SPacket(!NetworkStockCache.isConnected()));
-        }
-    }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onMousePressed(ScreenEvent.MouseButtonPressed.Pre event) {
-        if (StockToggleButton.handleClick(event.getMouseX(), event.getMouseY(), event.getButton())) {
-            event.setCanceled(true);
-            return;
-        }
         boolean craftButton = event.getButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT
                 || event.getButton() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE;
         if (craftButton && craftModifiers()

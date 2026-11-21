@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.4 — Sin compat de JEI
+
+- Eliminada la integración con JEI en 26.1.2 (botón de existencias, overlay de cantidades y nombre de la estación en el tooltip de patrones).
+- Eliminada la dependencia de JEI del proyecto.
+
 ## 2.0.3 — Assembler Matrix, selector mejorado y existencias en JEI
 
 Port a 26.1.2 de las funciones añadidas en la rama 1.21.1.

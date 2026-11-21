@@ -1,8 +1,6 @@
 package nadiendev.ae2usefulutilities.pattern.client;
 
-import nadiendev.ae2usefulutilities.compat.jei.RecipeFinderJEI;
 import net.minecraft.network.chat.Component;
-import net.neoforged.fml.ModList;
 import org.jetbrains.annotations.Nullable;
 
 public interface RecipeFinder {
@@ -16,9 +14,8 @@ public interface RecipeFinder {
     }
 
     final class Holder {
-        static final boolean JEI = ModList.get().isLoaded("jei");
         @Nullable
-        static final RecipeFinder INSTANCE = JEI ? new RecipeFinderJEI() : null;
+        static final RecipeFinder INSTANCE = null;
 
         private Holder() {
         }
